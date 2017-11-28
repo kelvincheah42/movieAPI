@@ -1,0 +1,153 @@
+<html ng-app='MovieSearch'>
+<head>
+<title>MovieSearch</title>
+<script src="https://code.angularjs.org/1.3.0-rc.1/angular.min.js"></script>
+ <script src="https://code.angularjs.org/1.3.0-rc.1/angular-resource.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>    
+    <!-- Bootstrap -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="style.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
+ <script type="text/javascript" src="scripts.js"></script>   
+<script src='app.js'></script>
+<script src="Movie.js"></script>
+<script src="index.js"></script>
+<script src="database.js"></script>
+</head>
+  <header>
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="index.html">Movie Center</a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="index.html"><i class="fa fa-home" aria-hidden="true"></i> Home</a></li>
+                        <li><a href="actor.html" onclick="Actor()"><i class="fa fa-h-square" aria-hidden="true"></i> Actor</a></li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+<body>
+    <div ng-controller='MovieApiControl'>
+        <h4 style="margin-left:110px"><input type="text" ng-model="search" ng-model-options="{ debounce: 1000 }" placeholder="Enter movie name" />
+        <button type='button' class='btn btn-success' ng-click='fetch()'>Search</button></h4></br>
+       
+    <div class='container' ng-hide="search">
+         <h1>Latest Movie Showing</h1>
+        <div class="list-movies row">
+         <ul class="movies-thumb-list clearfix">
+      <li class="movie-item fade-anim" ng-repeat="m in movieList">
+      <h3>{{m.title}}</h3>
+  <img ng-src="http://image.tmdb.org/t/p/w370/{{m.poster_path}}" data-toggle="modal" data-target="#myModal" ng-click='showDetail(m)' />
+
+
+         </div>
+<div class="load-more-wrapper">
+  <button class="load-more" ng-click="getMovieList()" ng-hide="moviesList.length == 0" >
+  <i class="fa fa-film"></i>Load More</button>
+  <p ng-show="movieList.length == 0">loading movies</p>
+</div>
+</ul>
+    </li>
+    </div>
+
+
+<div class='container' >
+     <div class="list-movies row">
+    <ul class="movies-thumb-list clearfix">
+        <li ng-repeat='d in data.results' class="movie-item fade-anim">
+               <div ng-if='d.poster_path!=null'>
+                 <h3>{{d.title}}</h3>   
+            <img src='https://image.tmdb.org/t/p/w500/{{d.poster_path}}' data-toggle="modal" data-target="#myModal" ng-click='showDetail(d)' >
+                </div>  
+               <div ng-if='d.poster_path==null'>
+            <img src='/na.jpg'  height='350' width='300' data-toggle="modal" data-target="#myModal" ng-click='showDetail(d)' >
+                </div>
+               
+               <br>
+           </li>
+            <div ng-if="data.results.length === 0">No Movie Found</div>
+        </ul>
+        <div class='modal' id='myModal' tabindex="-1" role='dialog' aria-labelledby="myModalLabel" aria-hidden="true" >
+            <div class='modal-dialog'>
+                <div class='modal-content'>
+                <div class='modal-header'>
+                    <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class='modal-title' id='myModalLabel'>
+                    Movie Info
+                    </h4>
+                    </div>
+                    <div class='modal-body'>
+                        <b>{{r.original_title}}</b><hr>
+                        <i>{{r.tagline}}</i>
+                        <div ng-if='r.backdrop_path!=null'>
+                    <img src='https://image.tmdb.org/t/p/w500/{{r.backdrop_path}}'>
+                        </div>
+                        <div ng-if='r.backdrop_path==null'>
+                            <img src='/na.jpg'>
+                        </div>
+                        <b><i>{{r.overview}}</i></b>
+                         <li>
+              <a href="{{r.homepage}}" title="{{r.title}}" target="_blank">
+                <i class="fa fa-external-link-square"></i>
+                <strong>Movie website</strong>
+                <span class="sr-only">{{r.title}}</span>
+              </a>
+            </li>
+                        <hr/>
+                        Release Date : <b>{{r.release_date}}</b>
+                        <hr/>
+                        Genre : <b>
+                        <ul style="list-style: none;">
+                            <li ng-repeat='g in r.genres'>
+                                <i>{{g.name}}</i>
+                            </li>
+                        </ul>        
+                        </b>
+                        <hr/>
+                        Duration: <b>{{r.runtime}}min</b>
+                        <hr/>
+                         Production Company : <b>
+                        <ul style="list-style: none;">
+                            <li ng-repeat='p in r.production_companies'>
+                                <i>{{p.name}}</i>
+                            </li>
+                        </ul>        
+                        </b>
+                        <hr/>
+                         Actor : <b>
+                        <ul style="list-style: none;">
+                            <li ng-repeat='p in r.credits.cast | limitTo:7 '>
+                                <i>{{p.name}} as {{p.character}}</i>
+                            </li>
+                        </ul>        
+                        </b>
+                        <hr/>
+                        <span>IMDB rating : <b>{{r.vote_average}}</b></span><br>
+                    </div>
+                    <div class='modal-footer'>
+                        <button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+</body>
+</html>
+

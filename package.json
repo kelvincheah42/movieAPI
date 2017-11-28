@@ -1,0 +1,24 @@
+{
+  "name": "movieapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^4.0.0",
+    "hapi": "^16.6.2",
+    "hoek": "^5.0.0",
+    "mongodb": "^2.2.33",
+    "restify": "^4.3.1",
+    "restify-jwt": "^0.4.0",
+    "sequelize": "^4.3.2",
+    "serve-static-restify": "^1.0.0",
+    "sqlite3": "^3.1.8",
+    "mongoose": "4.2.4"
+  }
+}
