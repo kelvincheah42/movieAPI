@@ -2,6 +2,7 @@ var MovieApi=angular.module('MovieSearch',['ngResource']);
 MovieApi.controller('MovieApiControl',['$scope', '$http',function($scope,$http){
    $scope.search='';
 $scope.fetch=function(){
+	//For Node.Js Function https://movieapi-kelvincheah123.c9users.io/search?q= 
    $http.jsonp('https://api.themoviedb.org/3/search/movie?api_key=ca79a6ea91d221034bf6c18bfcb5944c&query='+$scope.search+'&callback=JSON_CALLBACK')
     .success(function(result){
        console.log(result);
